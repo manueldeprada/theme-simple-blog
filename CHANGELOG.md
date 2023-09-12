@@ -6,6 +6,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.12.0] - 2023-08-15
+### Added
+- Mastodon comments system [See @oom/mastodom-comments](https://github.com/oom-components/mastodon-comments)
+
+### Fixed
+- `lang` attribute value in the `html` element.
+
+## [0.11.0] - 2023-08-01
+### Added
+- Optional `logo` variable [#16].
+- Support for footnotes
+
+### Changed
+- Show the TOC if the post has at least 1 subtitle.
+
+## [0.10.2] - 2023-07-20
+### Fixed
+- Error when post is plain text without titles [#15].
+
 ## [0.10.1] - 2023-07-19
 ### Fixed
 - Updated styles from Lume DS.
@@ -129,7 +148,12 @@ First version
 
 [#1]: https://github.com/lumeland/theme-simple-blog/issues/1
 [#5]: https://github.com/lumeland/theme-simple-blog/issues/5
+[#15]: https://github.com/lumeland/theme-simple-blog/issues/15
+[#16]: https://github.com/lumeland/theme-simple-blog/issues/16
 
+[0.12.0]: https://github.com/lumeland/theme-simple-blog/compare/v0.11.0...v0.12.0
+[0.11.0]: https://github.com/lumeland/theme-simple-blog/compare/v0.10.2...v0.11.0
+[0.10.2]: https://github.com/lumeland/theme-simple-blog/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/lumeland/theme-simple-blog/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/lumeland/theme-simple-blog/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/lumeland/theme-simple-blog/compare/v0.8.0...v0.9.0
