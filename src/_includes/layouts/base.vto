@@ -34,8 +34,9 @@
     <link rel="alternate" href="/feed.xml" type="application/atom+xml" title="{{ metas.site }}">
     <link rel="alternate" href="/feed.json" type="application/json" title="{{ metas.site }}">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="canonical" href="{{ url |> url(true) }}">
     <script src="/js/main.js" type="module"></script>
-    {{ it.extra_head || "" }}
+    {{ it.extra_head?.join("\n") }}
   </head>
   <body>
     <nav class="navbar">
@@ -50,8 +51,8 @@
       <ul class="navbar-links">
       {{- for entry of search.pages("menu.visible=true", "menu.order") }}
         <li>
-          <a href="{{ entry.data.url }}"{{ if entry.data.url == url }} aria-current="page"{{ /if }}>
-            {{ entry.data.menu.title || entry.data.title }}
+          <a href="{{ entry.url }}"{{ if entry.url == url }} aria-current="page"{{ /if }}>
+            {{ entry.menu.title || entry.title }}
           </a>
         </li>
       {{ /for }}

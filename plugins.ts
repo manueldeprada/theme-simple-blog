@@ -8,24 +8,41 @@ import resolveUrls from "lume/plugins/resolve_urls.ts";
 import metas from "lume/plugins/metas.ts";
 import pagefind, { Options as PagefindOptions } from "lume/plugins/pagefind.ts";
 import sitemap from "lume/plugins/sitemap.ts";
-import feed from "lume/plugins/feed.ts";
-import vento from "lume/plugins/vento.ts";
+import feed, { Options as FeedOptions } from "lume/plugins/feed.ts";
 import readingInfo from "lume/plugins/reading_info.ts";
-import toc from "https://deno.land/x/lume_markdown_plugins@v0.5.1/toc.ts";
-import image from "https://deno.land/x/lume_markdown_plugins@v0.5.1/image.ts";
-import footnotes from "https://deno.land/x/lume_markdown_plugins@v0.5.1/footnotes.ts";
+import { merge } from "lume/core/utils/object.ts";
+import toc from "https://deno.land/x/lume_markdown_plugins@v0.7.0/toc.ts";
+import image from "https://deno.land/x/lume_markdown_plugins@v0.7.0/image.ts";
+import footnotes from "https://deno.land/x/lume_markdown_plugins@v0.7.0/footnotes.ts";
 
-import type { Page, Site } from "lume/core.ts";
+import "lume/types.ts";
 
 export interface Options {
   prism?: Partial<PrismOptions>;
   date?: Partial<DateOptions>;
   pagefind?: Partial<PagefindOptions>;
+  feed?: Partial<FeedOptions>;
 }
 
+export const defaults: Options = {
+  feed: {
+    output: ["/feed.xml", "/feed.json"],
+    query: "type=post",
+    info: {
+      title: "=metas.site",
+      description: "=metas.description",
+    },
+    items: {
+      title: "=title",
+    },
+  },
+};
+
 /** Configure the site */
-export default function (options: Options = {}) {
-  return (site: Site) => {
+export default function (userOptions?: Options) {
+  const options = merge(defaults, userOptions);
+
+  return (site: Lume.Site) => {
     site.use(postcss())
       .use(basePath())
       .use(toc())
@@ -40,31 +57,23 @@ export default function (options: Options = {}) {
       .use(terser())
       .use(pagefind(options.pagefind))
       .use(sitemap())
-      .use(vento())
-      .use(feed({
-        output: ["/feed.xml", "/feed.json"],
-        query: "type=post",
-        info: {
-          title: "=metas.site",
-          description: "=metas.description",
-        },
-        items: {
-          title: "=title",
-        },
-      }))
+      .use(feed(options.feed))
       .copy("fonts")
       .copy("js")
       .copy("favicon.png")
-      .preprocess([".md"], (page: Page) => {
-        page.data.excerpt ??= (page.data.content as string).split(
-          /<!--\s*more\s*-->/i,
-        )[0];
+      .mergeKey("extra_head", "stringArray")
+      .preprocess([".md"], (pages) => {
+        for (const page of pages) {
+          page.data.excerpt ??= (page.data.content as string).split(
+            /<!--\s*more\s*-->/i,
+          )[0];
+        }
       });
 
     // Basic CSS Design System
     site.remoteFile(
       "_includes/css/ds.css",
-      "https://unpkg.com/@lumeland/ds@0.3.1/ds.css",
+      "https://unpkg.com/@lumeland/ds@0.3.3/ds.css",
     );
 
     // Mastodon comment system
