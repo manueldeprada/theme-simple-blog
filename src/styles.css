@@ -29,3 +29,9 @@ main {
 .search {
   margin-top: var(--row-gap-xsmall);
 }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
